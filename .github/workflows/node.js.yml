@@ -1,0 +1,52 @@
+name: Deploy front
+
+on:
+  push:
+    branches: [ develop ]
+  pull_request:
+    branches: [ develop ]
+  #schedule:
+    #- cron: '0 9,11,15,18 * * 1,2,3,4,5'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Build site
+    steps:
+
+     # - name: Setup Node.js environment
+     #   uses: actions/setup-node@v3
+       # with:
+     #     node-version: ${{ matrix.node-version }}
+
+     # - name: Checkout projeto
+     #   uses: actions/checkout@v3 
+
+     # - name: Diretorio 
+     #   run: ls ./pizzaria_front   
+      
+     # - name: Install dependecies 
+       # run: npm install ./pizzaria_front
+      - uses: actions/checkout@v3
+        name: Checkout
+
+      - name: Installing dependencies
+        run: npm ci
+
+      - name: Build project
+        run: npm run build
+
+      #- name: Ci
+       # run: npm ci ./pizzaria_front
+      #- name: Build Solution
+      #  run:  npm run build ./pizzaria_front 
+
+      - name: Sync files
+        uses: SamKirkland/FTP-Deploy-Action@4.3.3
+        with:
+            server: ${{ secrets.FTP_HOST }}
+            username: ${{ secrets.FTP_USER }}
+            password: ${{ secrets.FTP_PASSWORD }}
+            server-dir: /wwwroot/dev/
+            #local-dir: ./pizzaria_front/build
+            protocol: ftp
