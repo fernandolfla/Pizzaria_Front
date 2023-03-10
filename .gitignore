@@ -351,5 +351,3 @@ MigrationBackup/
 
 #Ignore pasta build
 /build
-/public/favicon.ico
-/public/index.html
